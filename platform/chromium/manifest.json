@@ -4,6 +4,7 @@
     "name": "uBlock Origin",
     "version": "1.13.7.0",
 
+    // 부가기능과 관련된 commands
     "commands": {
         "launch-element-zapper": {
             "description": "__MSG_popupTipZapper__"
@@ -15,7 +16,7 @@
             "description": "__MSG_popupTipLog__"
         }
     },
-    "default_locale": "en",
+    "default_locale": "en", // default 언어
     "description": "__MSG_extShortDesc__",
     "icons": {
         "16": "img/icon_16.png",
@@ -28,22 +29,22 @@
             "38": "img/browsericons/icon38.png"
         },
         "default_title": "uBlock Origin",
-        "default_popup": "popup.html"
+        "default_popup": "popup.html" // extenstion 아이콘 클릭시 load
     },
 
     "author": "All uBlock Origin contributors",
     "background": {
-        "page": "background.html"
+        "page": "background.html" // background에서 돌아가는 page (시각적으로 보이지는 않는다.)
     },
-    "content_scripts": [
+    "content_scripts": [ // 브라우저에 로딩된 페이지의 컨텍스트에서 실행되는 Javascript
         {
-            "matches": ["http://*/*", "https://*/*"],
+            "matches": ["http://*/*", "https://*/*"], // htttp나 htttps로 시작하는 모든 url에 대해 처리해준다.
             "js": ["js/vapi-client.js", "js/contentscript.js"],
             "run_at": "document_start",
             "all_frames": true
         },
         {
-            "matches": ["http://*/*", "https://*/*"],
+            "matches": ["http://*/*", "https://*/*"], // htttp나 htttps로 시작하는 모든 url에 대해 처리해준다.
             "js": ["js/scriptlets/subscriber.js"],
             "run_at": "document_idle",
             "all_frames": false
