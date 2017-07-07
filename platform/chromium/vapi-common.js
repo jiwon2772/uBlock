@@ -34,7 +34,7 @@ if ( !self.vAPI || self.vAPI.uBO !== true ) {
 }
 
 var vAPI = self.vAPI;
-var chrome = self.chrome;
+var chrome = self.chrome; //background.html에서 사용할 수 있는 chrome객체
 
 /******************************************************************************/
 
@@ -67,7 +67,7 @@ vAPI.download = function(details) {
 
 /******************************************************************************/
 
-vAPI.insertHTML = function(node, html) {
+vAPI.insertHTML = function(node, html) { //node에 html을 넣는 함수
     node.innerHTML = html;
 };
 

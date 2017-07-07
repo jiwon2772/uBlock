@@ -40,17 +40,17 @@
         {
             "matches": ["http://*/*", "https://*/*"], // htttp나 htttps로 시작하는 모든 url에 대해 처리해준다.
             "js": ["js/vapi-client.js", "js/contentscript.js"],
-            "run_at": "document_start",
-            "all_frames": true
+            "run_at": "document_start", // DOM이 생성되었거나 다른 모든 스크립트가 실행되기 전에 삽입 됩니다.
+            "all_frames": true // frame마다 실행하지 않고 맨위에서 한번만 실행
         },
         {
             "matches": ["http://*/*", "https://*/*"], // htttp나 htttps로 시작하는 모든 url에 대해 처리해준다.
             "js": ["js/scriptlets/subscriber.js"],
-            "run_at": "document_idle",
-            "all_frames": false
+            "run_at": "document_idle", // onload()이후에 실행된다.
+            "all_frames": false ㅍ// frame마다 실행하지 않고 맨위에서 한번만 실행
         }
     ],
-    "incognito": "split",
+    "incognito": "split", // split모드로 인해 secrete 프로세스에서 동작한다. (background도 포함)
     "minimum_chrome_version": "38.0",
     "optional_permissions": [ "file:///*" ],
     "options_page": "dashboard.html",

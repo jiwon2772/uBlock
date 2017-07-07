@@ -27,16 +27,16 @@
 
 /******************************************************************************/
 
-(function(self) {
+(function(self) { // 현재 파일 전체가 해당하는 scope
 
 /******************************************************************************/
 /******************************************************************************/
 
 // https://github.com/chrisaljoudi/uBlock/issues/464
-if ( document instanceof HTMLDocument === false ) {
+if ( document instanceof HTMLDocument === false ) { // document가 HTMLDocument가 아닌경우
     // https://github.com/chrisaljoudi/uBlock/issues/1528
     // A XMLDocument can be a valid HTML document.
-    if (
+    if ( // document가 XMLDocument가 아니거나 document에 div를 만들었는데 HTMLDivElement가 아닐경우
         document instanceof XMLDocument === false ||
         document.createElement('div') instanceof HTMLDivElement === false
     ) {
@@ -51,7 +51,7 @@ if ( document instanceof HTMLDocument === false ) {
 //   Skip text/plain documents.
 var contentType = document.contentType || '';
 if ( /^image\/|^text\/plain/.test(contentType) ) {
-    return; 
+    return;
 }
 
 /******************************************************************************/
@@ -83,7 +83,7 @@ vAPI.unlock = function() {
     if ( referenceCounter === 0 ) {
         // Eventually there will be code here to flush the javascript code
         // from this file out of memory when it ends up unused.
-        
+
     }
 };
 

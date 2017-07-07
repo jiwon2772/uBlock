@@ -35,7 +35,7 @@ var chrome = self.chrome;
 var manifest = chrome.runtime.getManifest();
 
 vAPI.chrome = true;
-vAPI.chromiumVersion = (function(){
+vAPI.chromiumVersion = (function(){ //크로미엄 버젼확인
     var matches = /\bChrom(?:e|ium)\/(\d+)\b/.exec(navigator.userAgent);
     return matches !== null ? parseInt(matches[1], 10) : NaN;
     })();
@@ -726,7 +726,7 @@ vAPI.messaging.onPortMessage = (function() {
             wrapper = callbackWrapperFactory(portFrom, details, 1023);
         }
 
-        // Destination not found: 
+        // Destination not found:
         if ( portTo === undefined ) {
             if ( wrapper !== undefined ) {
                 wrapper.callback();
