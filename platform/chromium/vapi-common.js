@@ -44,6 +44,7 @@ vAPI.setTimeout = vAPI.setTimeout || self.setTimeout.bind(self);
 
 // http://www.w3.org/International/questions/qa-scripts#directions
 
+// 국가에 따라 script 방향을 두가지로 설정
 var setScriptDirection = function(language) {
     document.body.setAttribute(
         'dir',
@@ -77,7 +78,7 @@ vAPI.getURL = chrome.runtime.getURL;
 
 /******************************************************************************/
 
-vAPI.i18n = chrome.i18n.getMessage;
+vAPI.i18n = chrome.i18n.getMessage; // 국제화 표준 (International)
 
 setScriptDirection(vAPI.i18n('@@ui_locale'));
 

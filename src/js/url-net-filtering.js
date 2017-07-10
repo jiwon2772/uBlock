@@ -66,9 +66,11 @@ var indexOfURL = function(entries, url) {
     // URLs must be ordered by increasing length.
     for ( var i = 0; i < entries.length; i++ ) {
         entry = entries[i];
+        // 확인하려는 url의 길이가 현재 보고있는 entry의 길이보다 짧을 경우 break
         if ( entry.url.length > urlLen ) {
             break;
         }
+        // 확인하려는 url과 entry의 url이 같을 경우 현재 i값을 return
         if ( entry.url === url ) {
             return i;
         }
@@ -77,7 +79,7 @@ var indexOfURL = function(entries, url) {
 };
 
 /******************************************************************************/
-
+// match하는 곳의 index를 반환
 var indexOfMatch = function(entries, url) {
     var urlLen = url.length,
         i = entries.length;
@@ -97,7 +99,7 @@ var indexOfMatch = function(entries, url) {
 };
 
 /******************************************************************************/
-
+// 특정 length보다 긴 entry가 시작되는 곳의 index를 반환
 var indexFromLength = function(entries, len) {
     // TODO: binary search -- maybe, depends on common use cases
     // URLs must be ordered by increasing length.
@@ -110,7 +112,7 @@ var indexFromLength = function(entries, len) {
 };
 
 /******************************************************************************/
-
+// 새로운 rule을 기존 entry list에 추가하는 함수
 var addRuleEntry = function(entries, url, action) {
     var entry = new RuleEntry(url, action),
         i = indexFromLength(entries, url.length);
