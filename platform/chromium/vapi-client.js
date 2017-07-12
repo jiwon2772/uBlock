@@ -27,149 +27,151 @@
 
 /******************************************************************************/
 
-(function(self) { // 현재 파일 전체가 해당하는 scope
+(function(self) {
 
-/******************************************************************************/
-/******************************************************************************/
+  /******************************************************************************/
+  /******************************************************************************/
 
-// https://github.com/chrisaljoudi/uBlock/issues/464
-if ( document instanceof HTMLDocument === false ) { // document가 HTMLDocument가 아닌경우
+  // https://github.com/chrisaljoudi/uBlock/issues/464
+  if (document instanceof HTMLDocument === false) { // document가 HTMLDocument가 아닌경우
     // https://github.com/chrisaljoudi/uBlock/issues/1528
     // A XMLDocument can be a valid HTML document.
     if ( // document가 XMLDocument가 아니거나 document에 div를 만들었는데 HTMLDivElement가 아닐경우
-        document instanceof XMLDocument === false ||
-        document.createElement('div') instanceof HTMLDivElement === false
+      document instanceof XMLDocument === false ||
+      document.createElement('div') instanceof HTMLDivElement === false
     ) {
-        return;
+      return;
     }
-}
+  }
 
-// https://github.com/gorhill/uBlock/issues/1124
-// Looks like `contentType` is on track to be standardized:
-//   https://dom.spec.whatwg.org/#concept-document-content-type
-// https://forums.lanik.us/viewtopic.php?f=64&t=31522
-//   Skip text/plain documents.
-var contentType = document.contentType || '';
-if ( /^image\/|^text\/plain/.test(contentType) ) {
+  // https://github.com/gorhill/uBlock/issues/1124
+  // Looks like `contentType` is on track to be standardized:
+  //   https://dom.spec.whatwg.org/#concept-document-content-type
+  // https://forums.lanik.us/viewtopic.php?f=64&t=31522
+  //   Skip text/plain documents.
+  var contentType = document.contentType || ''; // contentType이 존재하면 그 값을 넣고, 없으면 emptyString으로 지정
+  if (/^image\/|^text\/plain/.test(contentType)) { // 만약 ContentType이 'image/'' 또는 'text/plain'인 경우 return
     return;
-}
+  }
 
-/******************************************************************************/
+  /******************************************************************************/
 
-// https://bugs.chromium.org/p/project-zero/issues/detail?id=1225&desc=6#c10
-if ( !self.vAPI || self.vAPI.uBO !== true ) {
-    self.vAPI = { uBO: true };
-}
+  // https://bugs.chromium.org/p/project-zero/issues/detail?id=1225&desc=6#c10
+  if (!self.vAPI || self.vAPI.uBO !== true) {
+    self.vAPI = {
+      uBO: true
+    };
+  }
 
-var vAPI = self.vAPI;
-var chrome = self.chrome;
+  var vAPI = self.vAPI;
+  var chrome = self.chrome;
 
-// https://github.com/chrisaljoudi/uBlock/issues/456
-// Already injected?
-if ( vAPI.sessionId ) {
+  // https://github.com/chrisaljoudi/uBlock/issues/456
+  // Already injected?
+  if (vAPI.sessionId) {
     return;
-}
+  }
 
-/******************************************************************************/
+  /******************************************************************************/
 
-var referenceCounter = 0;
+  var referenceCounter = 0;
 
-vAPI.lock = function() {
+  vAPI.lock = function() {
     referenceCounter += 1;
-};
+  };
 
-vAPI.unlock = function() {
+  vAPI.unlock = function() {
     referenceCounter -= 1;
-    if ( referenceCounter === 0 ) {
-        // Eventually there will be code here to flush the javascript code
-        // from this file out of memory when it ends up unused.
+    if (referenceCounter === 0) {
+      // Eventually there will be code here to flush the javascript code
+      // from this file out of memory when it ends up unused.
 
     }
-};
+  };
 
-/******************************************************************************/
+  /******************************************************************************/
 
-vAPI.executionCost = {
-    start: function(){},
-    stop: function(){}
-};
-/*
-vAPI.executionCost = {
-    tcost: 0,
-    tstart: 0,
-    nstart: 0,
-    level: 1,
-    start: function() {
-        if ( this.nstart === 0 ) {
-            this.tstart = window.performance.now();
-        }
-        this.nstart += 1;
-    },
-    stop: function(mark) {
-        this.nstart -= 1;
-        if ( this.nstart !== 0 ) {
-            return;
-        }
-        var tcost = window.performance.now() - this.tstart;
-        this.tcost += tcost;
-        if ( mark === undefined ) {
-            return;
-        }
-        var top = window === window.top;
-        if ( !top && this.level < 2 ) {
-            return;
-        }
-        var context = window === window.top ? '  top' : 'frame';
-        var percent = this.tcost / window.performance.now() * 100;
-        console.log(
-            'uBO cost (%s): %sms/%s%% (%s: %sms)',
-            context,
-            this.tcost.toFixed(1),
-            percent.toFixed(1),
-            mark,
-            tcost.toFixed(2)
-        );
-    }
-};
-*/
-vAPI.executionCost.start();
+  vAPI.executionCost = {
+    start: function() {},
+    stop: function() {}
+  };
+  /*
+  vAPI.executionCost = {
+      tcost: 0,
+      tstart: 0,
+      nstart: 0,
+      level: 1,
+      start: function() {
+          if ( this.nstart === 0 ) {
+              this.tstart = window.performance.now();
+          }
+          this.nstart += 1;
+      },
+      stop: function(mark) {
+          this.nstart -= 1;
+          if ( this.nstart !== 0 ) {
+              return;
+          }
+          var tcost = window.performance.now() - this.tstart;
+          this.tcost += tcost;
+          if ( mark === undefined ) {
+              return;
+          }
+          var top = window === window.top;
+          if ( !top && this.level < 2 ) {
+              return;
+          }
+          var context = window === window.top ? '  top' : 'frame';
+          var percent = this.tcost / window.performance.now() * 100;
+          console.log(
+              'uBO cost (%s): %sms/%s%% (%s: %sms)',
+              context,
+              this.tcost.toFixed(1),
+              percent.toFixed(1),
+              mark,
+              tcost.toFixed(2)
+          );
+      }
+  };
+  */
+  vAPI.executionCost.start();
 
-/******************************************************************************/
+  /******************************************************************************/
 
-vAPI.randomToken = function() {
+  vAPI.randomToken = function() {
     return String.fromCharCode(Date.now() % 26 + 97) +
-           Math.floor(Math.random() * 982451653 + 982451653).toString(36);
-};
+      Math.floor(Math.random() * 982451653 + 982451653).toString(36);
+  };
 
-vAPI.sessionId = vAPI.randomToken();
-vAPI.chrome = true;
-vAPI.setTimeout = vAPI.setTimeout || self.setTimeout.bind(self);
+  vAPI.sessionId = vAPI.randomToken(); // random한 sessionId를 부여한다.
+  vAPI.chrome = true;
+  vAPI.setTimeout = vAPI.setTimeout || self.setTimeout.bind(self);
 
-/******************************************************************************/
+  /******************************************************************************/
 
-vAPI.shutdown = {
+  vAPI.shutdown = {
     jobs: [],
     add: function(job) {
-        this.jobs.push(job);
+      this.jobs.push(job);
     },
     exec: function() {
-        var job;
-        while ( (job = this.jobs.pop()) ) {
-            job();
-        }
+      var job;
+      while ((job = this.jobs.pop())) {
+        job();
+      }
     },
     remove: function(job) {
-        var pos;
-        while ( (pos = this.jobs.indexOf(job)) !== -1 ) {
-            this.jobs.splice(pos, 1);
-        }
+      var pos;
+      while ((pos = this.jobs.indexOf(job)) !== -1) {
+        this.jobs.splice(pos, 1);
+      }
     }
-};
+  };
 
-/******************************************************************************/
-/******************************************************************************/
+  /******************************************************************************/
+  /******************************************************************************/
 
-vAPI.messaging = {
+  vAPI.messaging = {
     port: null,
     portTimer: null,
     portTimerDelay: 10000,
@@ -181,241 +183,244 @@ vAPI.messaging = {
     shuttingDown: false,
 
     shutdown: function() {
-        this.shuttingDown = true;
-        this.destroyPort();
+      this.shuttingDown = true;
+      this.destroyPort();
     },
 
     disconnectListener: function() {
-        this.port = null;
-        vAPI.shutdown.exec();
+      this.port = null;
+      vAPI.shutdown.exec();
     },
     disconnectListenerCallback: null,
 
     messageListener: function(details) {
-        if ( !details ) {
-            return;
-        }
+      if (!details) {
+        return;
+      }
 
-        // Sent to all channels
-        if ( details.broadcast === true && !details.channelName ) {
-            for ( var channelName in this.channels ) {
-                this.sendToChannelListeners(channelName, details.msg);
-            }
-            return;
+      // Sent to all channels
+      if (details.broadcast === true && !details.channelName) {
+        for (var channelName in this.channels) {
+          this.sendToChannelListeners(channelName, details.msg);
         }
+        return;
+      }
 
-        // Response to specific message previously sent
-        if ( details.auxProcessId ) {
-            var listener = this.pending[details.auxProcessId];
-            delete this.pending[details.auxProcessId];
-            delete details.auxProcessId; // TODO: why?
-            if ( listener ) {
-                this.pendingCount -= 1;
-                listener(details.msg);
-                return;
-            }
+      // Response to specific message previously sent
+      if (details.auxProcessId) {
+        var listener = this.pending[details.auxProcessId];
+        delete this.pending[details.auxProcessId];
+        delete details.auxProcessId; // TODO: why?
+        if (listener) {
+          this.pendingCount -= 1;
+          listener(details.msg);
+          return;
         }
+      }
 
-        // Sent to a specific channel
-        var response = this.sendToChannelListeners(details.channelName, details.msg);
+      // Sent to a specific channel
+      var response = this.sendToChannelListeners(details.channelName, details.msg);
 
-        // Respond back if required
-        if ( details.mainProcessId === undefined ) {
-            return;
-        }
-        var port = this.connect();
-        if ( port !== null ) {
-            port.postMessage({
-                mainProcessId: details.mainProcessId,
-                msg: response
-            });
-        }
+      // Respond back if required
+      if (details.mainProcessId === undefined) {
+        return;
+      }
+      var port = this.connect();
+      if (port !== null) {
+        port.postMessage({
+          mainProcessId: details.mainProcessId,
+          msg: response
+        });
+      }
     },
     messageListenerCallback: null,
 
     portPoller: function() {
-        this.portTimer = null;
-        if ( this.port !== null ) {
-            if ( this.channelCount !== 0 || this.pendingCount !== 0 ) {
-                this.portTimer = vAPI.setTimeout(this.portPollerCallback, this.portTimerDelay);
-                this.portTimerDelay = Math.min(this.portTimerDelay * 2, 60 * 60 * 1000);
-                return;
-            }
+      this.portTimer = null;
+      if (this.port !== null) {
+        if (this.channelCount !== 0 || this.pendingCount !== 0) {
+          this.portTimer = vAPI.setTimeout(this.portPollerCallback, this.portTimerDelay);
+          this.portTimerDelay = Math.min(this.portTimerDelay * 2, 60 * 60 * 1000);
+          return;
         }
-        this.destroyPort();
+      }
+      this.destroyPort();
     },
     portPollerCallback: null,
 
     destroyPort: function() {
-        if ( this.portTimer !== null ) {
-            clearTimeout(this.portTimer);
-            this.portTimer = null;
+      if (this.portTimer !== null) {
+        clearTimeout(this.portTimer);
+        this.portTimer = null;
+      }
+      var port = this.port;
+      if (port !== null) {
+        port.disconnect();
+        port.onMessage.removeListener(this.messageListenerCallback);
+        port.onDisconnect.removeListener(this.disconnectListenerCallback);
+        this.port = null;
+      }
+      if (this.channelCount !== 0) {
+        this.channels = Object.create(null);
+        this.channelCount = 0;
+      }
+      // service pending callbacks
+      if (this.pendingCount !== 0) {
+        var pending = this.pending,
+          callback;
+        this.pending = Object.create(null);
+        this.pendingCount = 0;
+        for (var auxId in pending) {
+          callback = pending[auxId];
+          if (typeof callback === 'function') {
+            callback(null);
+          }
         }
-        var port = this.port;
-        if ( port !== null ) {
-            port.disconnect();
-            port.onMessage.removeListener(this.messageListenerCallback);
-            port.onDisconnect.removeListener(this.disconnectListenerCallback);
-            this.port = null;
-        }
-        if ( this.channelCount !== 0 ) {
-            this.channels = Object.create(null);
-            this.channelCount = 0;
-        }
-        // service pending callbacks
-        if ( this.pendingCount !== 0 ) {
-            var pending = this.pending, callback;
-            this.pending = Object.create(null);
-            this.pendingCount = 0;
-            for ( var auxId in pending ) {
-                callback = pending[auxId];
-                if ( typeof callback === 'function' ) {
-                    callback(null);
-                }
-            }
-        }
+      }
     },
 
     createPort: function() {
-        if ( this.shuttingDown ) {
-            return null;
-        }
-        if ( this.messageListenerCallback === null ) {
-            this.messageListenerCallback = this.messageListener.bind(this);
-            this.disconnectListenerCallback = this.disconnectListener.bind(this);
-            this.portPollerCallback = this.portPoller.bind(this);
-        }
-        try {
-            this.port = chrome.runtime.connect({name: vAPI.sessionId}) || null;
-        } catch (ex) {
-            this.port = null;
-        }
-        if ( this.port !== null ) {
-            this.port.onMessage.addListener(this.messageListenerCallback);
-            this.port.onDisconnect.addListener(this.disconnectListenerCallback);
-        }
-        this.portTimerDelay = 10000;
-        if ( this.portTimer === null ) {
-            this.portTimer = vAPI.setTimeout(this.portPollerCallback, this.portTimerDelay);
-        }
-        return this.port;
+      if (this.shuttingDown) {
+        return null;
+      }
+      if (this.messageListenerCallback === null) {
+        this.messageListenerCallback = this.messageListener.bind(this);
+        this.disconnectListenerCallback = this.disconnectListener.bind(this);
+        this.portPollerCallback = this.portPoller.bind(this);
+      }
+      try {
+        this.port = chrome.runtime.connect({
+          name: vAPI.sessionId
+        }) || null;
+      } catch (ex) {
+        this.port = null;
+      }
+      if (this.port !== null) {
+        this.port.onMessage.addListener(this.messageListenerCallback);
+        this.port.onDisconnect.addListener(this.disconnectListenerCallback);
+      }
+      this.portTimerDelay = 10000;
+      if (this.portTimer === null) {
+        this.portTimer = vAPI.setTimeout(this.portPollerCallback, this.portTimerDelay);
+      }
+      return this.port;
     },
 
     connect: function() {
-        return this.port !== null ? this.port : this.createPort();
+      return this.port !== null ? this.port : this.createPort();
     },
 
     send: function(channelName, message, callback) {
-        this.sendTo(channelName, message, undefined, undefined, callback);
+      this.sendTo(channelName, message, undefined, undefined, callback);
     },
 
     sendTo: function(channelName, message, toTabId, toChannel, callback) {
-        // Too large a gap between the last request and the last response means
-        // the main process is no longer reachable: memory leaks and bad
-        // performance become a risk -- especially for long-lived, dynamic
-        // pages. Guard against this.
-        if ( this.pendingCount > 25 ) {
-            vAPI.shutdown.exec();
+      // Too large a gap between the last request and the last response means
+      // the main process is no longer reachable: memory leaks and bad
+      // performance become a risk -- especially for long-lived, dynamic
+      // pages. Guard against this.
+      if (this.pendingCount > 25) {
+        vAPI.shutdown.exec();
+      }
+      var port = this.connect();
+      if (port === null) {
+        if (typeof callback === 'function') {
+          callback();
         }
-        var port = this.connect();
-        if ( port === null ) {
-            if ( typeof callback === 'function' ) {
-                callback();
-            }
-            return;
-        }
-        var auxProcessId;
-        if ( callback ) {
-            auxProcessId = this.auxProcessId++;
-            this.pending[auxProcessId] = callback;
-            this.pendingCount += 1;
-        }
-        port.postMessage({
-            channelName: channelName,
-            auxProcessId: auxProcessId,
-            toTabId: toTabId,
-            toChannel: toChannel,
-            msg: message
-        });
+        return;
+      }
+      var auxProcessId;
+      if (callback) {
+        auxProcessId = this.auxProcessId++;
+        this.pending[auxProcessId] = callback;
+        this.pendingCount += 1;
+      }
+      port.postMessage({ //window.postMessage를 이용하여 background에게 메세제를 전달한다.
+        channelName: channelName,
+        auxProcessId: auxProcessId,
+        toTabId: toTabId,
+        toChannel: toChannel,
+        msg: message
+      });
     },
 
     addChannelListener: function(channelName, callback) {
-        if ( typeof callback !== 'function' ) {
-            return;
-        }
-        var listeners = this.channels[channelName];
-        if ( listeners !== undefined && listeners.indexOf(callback) !== -1 ) {
-            console.error('Duplicate listener on channel "%s"', channelName);
-            return;
-        }
-        if ( listeners === undefined ) {
-            this.channels[channelName] = [callback];
-            this.channelCount += 1;
-        } else {
-            listeners.push(callback);
-        }
-        this.connect();
+      if (typeof callback !== 'function') {
+        return;
+      }
+      var listeners = this.channels[channelName];
+      if (listeners !== undefined && listeners.indexOf(callback) !== -1) {
+        console.error('Duplicate listener on channel "%s"', channelName);
+        return;
+      }
+      if (listeners === undefined) {
+        this.channels[channelName] = [callback];
+        this.channelCount += 1;
+      } else {
+        listeners.push(callback);
+      }
+      this.connect();
     },
 
     removeChannelListener: function(channelName, callback) {
-        if ( typeof callback !== 'function' ) {
-            return;
-        }
-        var listeners = this.channels[channelName];
-        if ( listeners === undefined ) {
-            return;
-        }
-        var pos = listeners.indexOf(callback);
-        if ( pos === -1 ) {
-            console.error('Listener not found on channel "%s"', channelName);
-            return;
-        }
-        listeners.splice(pos, 1);
-        if ( listeners.length === 0 ) {
-            delete this.channels[channelName];
-            this.channelCount -= 1;
-        }
+      if (typeof callback !== 'function') {
+        return;
+      }
+      var listeners = this.channels[channelName];
+      if (listeners === undefined) {
+        return;
+      }
+      var pos = listeners.indexOf(callback);
+      if (pos === -1) {
+        console.error('Listener not found on channel "%s"', channelName);
+        return;
+      }
+      listeners.splice(pos, 1);
+      if (listeners.length === 0) {
+        delete this.channels[channelName];
+        this.channelCount -= 1;
+      }
     },
 
     removeAllChannelListeners: function(channelName) {
-        var listeners = this.channels[channelName];
-        if ( listeners === undefined ) {
-            return;
-        }
-        delete this.channels[channelName];
-        this.channelCount -= 1;
+      var listeners = this.channels[channelName];
+      if (listeners === undefined) {
+        return;
+      }
+      delete this.channels[channelName];
+      this.channelCount -= 1;
     },
 
     sendToChannelListeners: function(channelName, msg) {
-        var listeners = this.channels[channelName];
-        if ( listeners === undefined ) {
-            return;
+      var listeners = this.channels[channelName];
+      if (listeners === undefined) {
+        return;
+      }
+      var response;
+      for (var i = 0, n = listeners.length; i < n; i++) {
+        response = listeners[i](msg);
+        if (response !== undefined) {
+          break;
         }
-        var response;
-        for ( var i = 0, n = listeners.length; i < n; i++ ) {
-            response = listeners[i](msg);
-            if ( response !== undefined ) {
-                break;
-            }
-        }
-        return response;
+      }
+      return response;
     }
-};
+  };
 
-/******************************************************************************/
+  /******************************************************************************/
 
-vAPI.shutdown.add(function() {
+  vAPI.shutdown.add(function() {
     vAPI.messaging.shutdown();
     delete window.vAPI;
-});
+  });
 
-// https://www.youtube.com/watch?v=rT5zCHn0tsg
-// https://www.youtube.com/watch?v=E-jS4e3zacI
+  // https://www.youtube.com/watch?v=rT5zCHn0tsg
+  // https://www.youtube.com/watch?v=E-jS4e3zacI
 
-vAPI.executionCost.stop('vapi-client.js');
+  vAPI.executionCost.stop('vapi-client.js');
 
-/******************************************************************************/
-/******************************************************************************/
+  /******************************************************************************/
+  /******************************************************************************/
 
 })(this);
 

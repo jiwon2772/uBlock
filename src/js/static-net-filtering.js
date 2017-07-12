@@ -2589,6 +2589,7 @@ FilterContainer.prototype.matchString = function(context) {
     // filter.
 
     // Prime tokenizer: we get a normalized URL in return.
+    // 일반적 URL을 반환한다.
     var url = this.urlTokenizer.setURL(context.requestURL);
 
     // These registers will be used by various filters
@@ -2608,6 +2609,7 @@ FilterContainer.prototype.matchString = function(context) {
     // The purpose of the `important` option is to reverse the order of
     // evaluation. Normally, it is "evaluate block then evaluate allow", with
     // the `important` property it is "evaluate allow then evaluate block".
+    // 우선순위가 높은('import')에 대해서 매칭한다. (key = 2)
     catBits = BlockAnyTypeAnyParty | Important;
     if ( (bucket = categories.get(catBits)) ) {
         if ( this.matchTokens(bucket, url) ) {

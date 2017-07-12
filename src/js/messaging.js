@@ -472,6 +472,7 @@ var tagNameToRequestTypeMap = {
 
 var filterRequests = function(pageStore, details) {
     var requests = details.requests;
+    // 사용자가 현재 page에 대해서 block설정을 했는지 안했는지에 따라서 달라지는 듯 하다.
     if ( µb.userSettings.collapseBlocked === false ) {
         return requests;
     }
@@ -488,6 +489,7 @@ var filterRequests = function(pageStore, details) {
         i = requests.length;
     while ( i-- ) {
         request = requests[i];
+        // hostname과 Type을 저장하여 pageStore.filterRequest로 보낸다.
         context.requestURL = punycodeURL(request.url);
         context.requestHostname = hostnameFromURI(context.requestURL);
         context.requestType = tagNameToRequestTypeMap[request.tag];
@@ -542,7 +544,7 @@ var onMessage = function(request, sender, callback) {
         break;
 
     case 'filterRequests':
-        if ( pageStore && pageStore.getNetFilteringSwitch() ) {
+        if ( pageStore && pageStoostre.getNetFilteringSwitch() ) {
             response = {
                 result: filterRequests(pageStore, request),
                 netSelectorCacheCountMax: µb.cosmeticFilteringEngine.netSelectorCacheCountMax

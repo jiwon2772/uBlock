@@ -615,6 +615,9 @@ PageStore.prototype.filterRequest = function(context) {
     // We want to short-term cache filtering results of collapsible types,
     // because they are likely to be reused, from network request handler and
     // from content script handler.
+
+    // 먼저 context의 type이 image, media, object, sub_frame에 해당되는지 확인
+    // 해당되지 않는 경우 filterRequestNoCache를 호출
     if ( 'image media object sub_frame'.indexOf(requestType) === -1 ) {
         return this.filterRequestNoCache(context);
     }
